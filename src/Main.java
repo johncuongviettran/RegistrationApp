@@ -9,8 +9,27 @@ public class Main {
 
         System.out.println("\n\nHello, RegistrationApp!\n");
 
+        //Read and stores curriculum.dat.
+        Curriculum curriculum = new Curriculum("curriculum.dat");
+        System.out.println("Curriculum:\n" + curriculum.formatCurriculumForOutput());
+
+        //Obtains the sum of all credit hours in the curriculum.
+        int sumOfCurriculumCreditHours = curriculum.calculateCreditHoursSum();
+        System.out.println( "The sum of the credit hours for the curriculum is " + sumOfCurriculumCreditHours);
+
+        //Obtains the number of courses from a specified department in the curriculum.
+        System.out.println("Enter the department you are searching for: ");
+        String department = sc.next();
+        System.out.println("There are " + curriculum.getNumberOfCoursesOfDepartment(department) + " courses from the " + department + " department in the curriculum.");
+
+        //Checks if a specified course is in the curriculum or if the specified course can fulfil a course category.
+        Registrar registrar = new Registrar("registrar.txt");
+        System.out.println("Enter the course you are searching for: ");
+        String course = sc.next() + " " + sc.next();
+        curriculum.checkIfContainsCourse(course, registrar);
+
         //Reads curriculum.dat and stores each line as a String, Integer Map.
-        Map<String, Integer> curriculumMap = new HashMap<>();
+        /**Map<String, Integer> curriculumMap = new HashMap<>();
         File curriculumFile = new File("curriculum.dat");
         curriculumMap = readAndStoreFileWithCoursesAndCreditHours(curriculumFile);
         System.out.println("The map of the curriculum with courses as keys and credit hours as values is " + curriculumMap);
@@ -34,10 +53,10 @@ public class Main {
         }
         else {
             System.out.println("The curriculum does not contain the" + course + " course.");
-        }
+        }**/
     }
     //Function to read a file with courses followed by credit hours and store this information into a String, Integer Map.
-    private static Map<String, Integer> readAndStoreFileWithCoursesAndCreditHours (File file) throws FileNotFoundException {
+    /**private static Map<String, Integer> readAndStoreFileWithCoursesAndCreditHours (File file) throws FileNotFoundException {
         Map<String, Integer> tempMap = new HashMap<>();
         try (Scanner scFile = new Scanner(file)){
             while( scFile.hasNext() ) {
@@ -67,5 +86,5 @@ public class Main {
             }
         }
         return tempList;
-    }
+    }**/
 }
