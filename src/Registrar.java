@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Registrar {
 
-    ArrayList<Course> registrar;
+    private ArrayList<Course> registrar;
 
     public Registrar(String fileName) throws FileNotFoundException {
         File file = new File(fileName);
@@ -18,7 +18,7 @@ public class Registrar {
                 Integer sectionNumber = Integer.valueOf(scFile.next());
                 String[] tempArray = scFile.next().split(":");
                 LocalTime startTime = LocalTime.of(Integer.valueOf(tempArray[0]), Integer.valueOf(tempArray[1]));
-                Course course = new Course(department,courseNumber,sectionNumber,startTime);
+                Course course = new Course(Department.valueOf(department),courseNumber,sectionNumber,startTime);
                 tempList.add(course);
             }
         }

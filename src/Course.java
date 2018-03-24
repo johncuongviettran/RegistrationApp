@@ -2,19 +2,19 @@ import java.time.LocalTime;
 
 public class Course {
 
-    String department;
-    Integer courseNumber;
-    Integer sectionNumber;
-    LocalTime startTime;
+    private Department department;
+    private Integer courseNumber;
+    private Integer sectionNumber;
+    private LocalTime startTime;
 
-    public Course(String department, Integer courseNumber, Integer sectionNumber, LocalTime startTime) {
+    public Course(Department department, Integer courseNumber, Integer sectionNumber, LocalTime startTime) {
         this.department = department;
         this.courseNumber = courseNumber;
         this.sectionNumber = sectionNumber;
         this.startTime = startTime;
     }
 
-    public String getDepartment() {
+    public Department getDepartment() {
         return department;
     }
 

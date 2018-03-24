@@ -8,7 +8,7 @@ public class Curriculum {
 
     public Curriculum (String fileName) throws FileNotFoundException {
         File file = new File(fileName);
-        Map<String, Integer> tempMap = new HashMap();
+        Map<String, Integer> tempMap = new HashMap<>();
         try (Scanner scFile = new Scanner(file)){
             while( scFile.hasNext() ) {
                 String tempString = scFile.nextLine();
@@ -91,7 +91,7 @@ public class Curriculum {
                 & (course.contains("AADS") | course.contains("HIST") | course.contains("PHIL") | course.contains("THEO")
                 | course.contains("BIOL") | course.contains("CHEM") | course.contains("PHYS") | course.contains("CPSC"))){
             for (Course courses :viableCourses) {
-                if (course.equals((String)courses.department + " " + courses.getCourseNumber())){
+                if (course.equals(courses.getDepartment() + " " + courses.getCourseNumber())){
                     System.out.println("The curriculum contains the course, " + course + ".");
                 }
             }
