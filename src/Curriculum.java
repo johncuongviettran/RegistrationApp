@@ -8,7 +8,7 @@ public class Curriculum {
 
     public Curriculum (String fileName) throws FileNotFoundException {
         File file = new File(fileName);
-        Map<String, Integer> tempMap = new HashMap<>();
+        Map<String, Integer> tempMap = new LinkedHashMap<>();
         try (Scanner scFile = new Scanner(file)){
             while( scFile.hasNext() ) {
                 String tempString = scFile.nextLine();
@@ -56,21 +56,21 @@ public class Curriculum {
     public ArrayList<String> findCoursesOfDepartment (String department){
         ArrayList<String> tempList = new ArrayList<>();
         for (Map.Entry<String,Integer> entry: coursesAndCreditHours.entrySet()) {
-            if (entry.getKey().contains("*")){
-                if (entry.getKey().contains("African American Heritage") & department.equals("AADS")){
+            if (entry.getKey().startsWith("*")){
+                if (entry.getKey().contains("African American Heritage") && department.equals("AADS")){
                     tempList.add(entry.getKey());
                 }
-                else if (entry.getKey().contains("Human Past") & (department.equals("THEO") | department.equals("PHIL") | department.equals("HIST"))) {
+                else if (entry.getKey().contains("Human Past") && (department.equals("THEO") || department.equals("PHIL") || department.equals("HIST"))) {
                     tempList.add(entry.getKey());
                 }
-                else if (entry.getKey().contains("Scientific Reasoning") & (department.equals("BIOL") | department.equals("CHEM") | department.equals("PHYS"))) {
+                else if (entry.getKey().contains("Scientific Reasoning") && (department.equals("BIOL") || department.equals("CHEM") || department.equals("PHYS"))) {
                     tempList.add(entry.getKey());
                 }
-                else if (entry.getKey().contains("CPSC Elective") & department.equals("CPSC")) {
+                else if (entry.getKey().contains("CPSC Elective") && department.equals("CPSC")) {
                     tempList.add(entry.getKey());
                 }
             }
-            else if (entry.getKey().contains(department)){
+            else if (entry.getKey().split(" ")[0].equals(department)){
                 tempList.add(entry.getKey());
             }
         }
@@ -80,32 +80,38 @@ public class Curriculum {
         int numberOfCourses = findCoursesOfDepartment(department).size();
         return numberOfCourses;
     }
-    public void checkIfContainsCourse (String course, Registrar registrar) {
-        ArrayList<Course> viableCourses = new ArrayList<>();
+    public Boolean checkIfContainsCourse (String course, Registrar registrar) {
+        ArrayList<CourseRegistrar> viableCourses = new ArrayList<>();
         viableCourses.addAll(registrar.getRegistrar());
+        Boolean bool = null;
         if (coursesAndCreditHours.containsKey(course)) {
-            System.out.println("The curriculum contains the course, " + course + ".");
+            bool = Boolean.TRUE;
         }
-        else if ((coursesAndCreditHours.containsKey("* African American Heritage") | coursesAndCreditHours.containsKey("* Human Past")
-                | coursesAndCreditHours.containsKey("* Scientific Reasoning") | coursesAndCreditHours.containsKey("* CPSC Elective"))
-                & (course.contains("AADS") | course.contains("HIST") | course.contains("PHIL") | course.contains("THEO")
-                | course.contains("BIOL") | course.contains("CHEM") | course.contains("PHYS") | course.contains("CPSC"))){
-            for (Course courses :viableCourses) {
-                if (course.equals(courses.getDepartment() + " " + courses.getCourseNumber())){
-                    System.out.println("The curriculum contains the course, " + course + ".");
+        else if ((coursesAndCreditHours.containsKey("* African American Heritage") || coursesAndCreditHours.containsKey("* Human Past")
+                || coursesAndCreditHours.containsKey("* Scientific Reasoning") || coursesAndCreditHours.containsKey("* CPSC Elective"))
+                && (course.contains("AADS") || course.contains("HIST") || course.contains("PHIL") || course.contains("THEO")
+                || course.contains("BIOL") || course.contains("CHEM") || course.contains("PHYS") || course.contains("CPSC"))){
+            for (CourseRegistrar courses :viableCourses) {
+                if (course.equals(courses.getCourse())){
+                    bool = Boolean.TRUE;
+                    break;
+                }
+                else {
+                    bool = Boolean.FALSE;
                 }
             }
         }
         else {
-            System.out.println("The curriculum does not contain the course, " + course + ".");
+            bool = Boolean.FALSE;
         }
+        return bool;
     }
-    public void checkIfContainsCourse (String course){
+    public Boolean checkIfContainsCourse (String course){
         if (coursesAndCreditHours.containsKey(course)){
-            System.out.println("The curriculum contains the course, " + course + ".");
+            return Boolean.TRUE;
         }
         else {
-            System.out.println("The curriculum does not contain the course, " + course + ".");
+            return Boolean.FALSE;
         }
     }
 }

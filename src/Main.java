@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -19,15 +18,52 @@ public class Main {
 
         //Obtains the number of courses from a specified department in the curriculum.
         System.out.println("Enter the department you are searching for: ");
-        String department = sc.next();
-        System.out.println("There are " + curriculum.getNumberOfCoursesOfDepartment(department) + " courses from the " + department + " department in the curriculum.");
+        String departmentSearch = sc.next();
+        System.out.println("There are " + curriculum.getNumberOfCoursesOfDepartment(departmentSearch) + " courses from the " + departmentSearch + " department in the curriculum.");
 
-        //Checks if a specified course is in the curriculum or if the specified course can fulfil a course category.
-        Registrar registrar = new Registrar("registrar.txt");
+        //Checks if a specified course is in the curriculum or if the specified course can fulfil a course category. There is a separate constructor for Registrar the asks for the length of each course individually.
+        System.out.println("Enter the length of all courses in terms of minutes.");
+        Integer lengthOfAllCoursesInMinutes = sc.nextInt();
+        Registrar registrar = new Registrar("registrar.txt", lengthOfAllCoursesInMinutes);
         System.out.println("Enter the course you are searching for: ");
         String course = sc.next() + " " + sc.next();
-        curriculum.checkIfContainsCourse(course, registrar);
+        if (curriculum.checkIfContainsCourse(course, registrar)){
+            System.out.println(course + " is in the curriculum.");
+        }
+        else {
+            System.out.println(course + " is not in the curriculum.");
+        }
 
+        //Reads and stores transcript.txt
+        Transcript transcript = new Transcript("transcript.txt");
+        System.out.println("Transcript:\n" + transcript.formatForOutput());
+
+        //Obtains the sum of all credit hours in the transcript.
+        Integer transcriptCreditHoursSum = transcript.calculateCreditHoursSum();
+        System.out.println("The sum of the credit hours for the transcript is " + transcriptCreditHoursSum);
+
+        //Checks courses in the transcript if they are in the curriculum and represents it with a map of the courses and a corresponding boolean value.
+        Map<String, Boolean> transcriptInCurriculumMap = transcript.checkIfTranscriptCourseInCurriculum(curriculum, registrar);
+        System.out.println("The map of the courses and their boolean value in relation to their status of being present in the curriculum is:\n" + transcriptInCurriculumMap);
+
+        //Checks if a specified course is in the transcript.
+        System.out.println("Enter the course you are searching for with its corresponding number of credit hours: ");
+        CourseTranscript courseTranscriptSearch = new CourseTranscript(Department.valueOf(sc.next()), sc.nextInt(), sc.nextInt());
+        if (transcript.checkIfContainsCourse(courseTranscriptSearch)){
+            System.out.println(courseTranscriptSearch.getCourseAndCreditHours() + " is in the transcript.");
+        }
+        else {
+            System.out.println(courseTranscriptSearch.getCourseAndCreditHours() + " is not in the transcript.");
+        }
+
+        //Checks if the courses in the transcript are enough to complete all curriculum requirement to graduate.
+        if (transcript.checkIfAllCurriculumRequirementsAreCompleted(curriculum, registrar)){
+            System.out.println("All curriculum requirements have been met. Student is eligible to graduate.");
+        }
+        else {
+            System.out.println("All curriculum requirements have not been met. Student is not eligible to graduate.");
+        }
+        
         //Reads curriculum.dat and stores each line as a String, Integer Map.
         /**Map<String, Integer> curriculumMap = new HashMap<>();
         File curriculumFile = new File("curriculum.dat");
