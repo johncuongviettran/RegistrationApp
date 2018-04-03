@@ -1,9 +1,12 @@
 import java.io.FileNotFoundException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class Main {
 
     private static Scanner sc = new Scanner(System.in);
+    private static DateTimeFormatter formatTimeHHmm = DateTimeFormatter.ofPattern("HH:mm");
     public static void main(String[] args) throws FileNotFoundException {
 
         System.out.println("\n\nHello, RegistrationApp!\n");
@@ -17,7 +20,7 @@ public class Main {
         System.out.println( "The sum of the credit hours for the curriculum is " + sumOfCurriculumCreditHours);
 
         //Obtains the number of courses from a specified department in the curriculum.
-        System.out.println("Enter the department you are searching for: ");
+        System.out.println("Enter the department you are searching for in the Curriculum: ");
         String departmentSearch = sc.next();
         System.out.println("There are " + curriculum.getNumberOfCoursesOfDepartment(departmentSearch) + " courses from the " + departmentSearch + " department in the curriculum.");
 
@@ -63,7 +66,39 @@ public class Main {
         else {
             System.out.println("All curriculum requirements have not been met. Student is not eligible to graduate.");
         }
-        
+        //Outputs the previously stored registrar
+        System.out.println("Registar:\n" + registrar.formatForOutput());
+
+        //Finds and Stores courses of a specific department in the registrar.
+        System.out.println("Enter the department you are searching for in the Registrar: ");
+        Department departmentSearchRegistrar = Department.valueOf(sc.next());
+        Registrar registrarSpecificCourse = registrar.findCoursesOfSpecifcDepartment(departmentSearchRegistrar);
+        System.out.println("Department Search (" + departmentSearchRegistrar + "):\n" + registrarSpecificCourse.formatForOutput());
+
+        //Finds and Stores courses within a specified time frame in the registrar.
+        System.out.println("Enter the time frame you are searching for in the format of \"(hour of start time) (minute of start time) (hour of end time) (minute of end time)\": ");
+        LocalTime startTime = LocalTime.of(sc.nextInt(),sc.nextInt());
+        LocalTime endTime = LocalTime.of(sc.nextInt(),sc.nextInt());
+        Registrar registrarWithinTimeFrame = registrar.findCoursesWithinTimeFrame(startTime, endTime);
+        System.out.println("Within Time Frame (" + startTime.format(formatTimeHHmm) + "-" + endTime.format(formatTimeHHmm) + "):\n" + registrarWithinTimeFrame.formatForOutput());
+
+        //Finds and stores courses that count towards a category in the registrar.
+        System.out.println("Enter the name of the category you are searching for without the asterisk: ");
+        String category = sc.next() + sc.nextLine();
+        Set<CourseRegistrar> setRegistrarCategorySearch = new HashSet<>();
+        setRegistrarCategorySearch = registrar.findCoursesForCategory(category, curriculum);
+        System.out.println("Category Search (" + category + "):" + "\nDepartment/Course Number/Section Number/Start Time/Course Length(Minutes)");
+        setRegistrarCategorySearch.forEach(courseRegistrar -> System.out.println(courseRegistrar.formatForOutput()));
+
+        //Checks if a specified course is in the registrar.
+        System.out.println("Enter the course you are searching for with its corresponding section, hour of start time, minute of start time, and course length in minutes: ");
+        CourseRegistrar courseRegistrarSearch = new CourseRegistrar(Department.valueOf(sc.next()), sc.nextInt(), sc.nextInt(), LocalTime.of(sc.nextInt(), sc.nextInt()), sc.nextInt());
+        if (registrar.checkIfContainsCourse(courseRegistrarSearch)){
+            System.out.println(courseRegistrarSearch.formatForOutput() + " is in the registrar.");
+        }
+        else {
+            System.out.println(courseTranscriptSearch.getCourseAndCreditHours() + " is not in the registrar.");
+        }
         //Reads curriculum.dat and stores each line as a String, Integer Map.
         /**Map<String, Integer> curriculumMap = new HashMap<>();
         File curriculumFile = new File("curriculum.dat");

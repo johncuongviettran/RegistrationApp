@@ -27,4 +27,15 @@ public class CourseTranscript {
     public String getCourseAndCreditHours(){
         return department + " " + courseNumber  + " " + creditHours;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        CourseTranscript other = (CourseTranscript) obj;
+        if (this.department.equals(other.department) && this.courseNumber.equals(other.courseNumber) && this.creditHours.equals(other.creditHours)){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
 }

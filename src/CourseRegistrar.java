@@ -1,6 +1,9 @@
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class CourseRegistrar {
+
+    private DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
 
     private Department department;
     private Integer courseNumber;
@@ -38,6 +41,20 @@ public class CourseRegistrar {
     }
     public String getCourseAndSection(){
         return department + " " + courseNumber + " " + sectionNumber;
+    }
+    public String formatForOutput (){
+        return department + " " + courseNumber + " " + sectionNumber + " " + startTime.format(format) + " " + lengthOfCourseInMinutes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+    CourseRegistrar other = (CourseRegistrar)obj;
+        if (this.department.equals(other.department) && this.courseNumber.equals(other.courseNumber) && this.sectionNumber.equals(other.sectionNumber)){
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
 
